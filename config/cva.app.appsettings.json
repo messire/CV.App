@@ -1,0 +1,11 @@
+{
+  "AllowedHosts": "*",
+  "Postgres": {
+    "Connection": "$Postgres__Connection",
+    "Pooling": {
+      "Lifetime": "$Postgres__Pooling__Lifetime",
+      "MinPoolSize": "$Postgres__Pooling__MinSize",
+      "MaxPoolSize": "$Postgres__Pooling__MaxSize"
+    }
+  }
+}
