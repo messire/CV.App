@@ -1,11 +1,16 @@
 {
   "AllowedHosts": "*",
-  "Postgres": {
-    "Connection": "$Postgres__Connection",
-    "Pooling": {
-      "Lifetime": "$Postgres__Pooling__Lifetime",
-      "MinPoolSize": "$Postgres__Pooling__MinSize",
-      "MaxPoolSize": "$Postgres__Pooling__MaxSize"
-    }
+  "Database": {
+    "Mongo": {
+      "Connection": "$Database__Mongo__Connection",
+      "DatabaseName": "$Database__Mongo__DatabaseName"
+    },
+    "Postgres": {
+      "Connection": "$Database__Postgres__Connection",
+      "Lifetime": "$Database__Postgres__Pooling__Lifetime",
+      "MinPoolSize": "$Database__Postgres__Pooling__MinSize",
+      "MaxPoolSize": "$Database__Postgres__Pooling__MaxSize"
+    },
+    "Type": "$Database__Type"
   }
 }

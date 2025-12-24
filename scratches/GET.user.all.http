@@ -1,0 +1,2 @@
+GET https://localhost:7145/
+Accept: application/json

@@ -17,6 +17,10 @@
         </Content>
     </ItemGroup>
 
+    <PropertyGroup Condition="$(IsTestProject)">
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
     <!-- Visibility -->
     <ItemGroup>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
