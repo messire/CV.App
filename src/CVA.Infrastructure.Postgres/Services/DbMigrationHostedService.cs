@@ -5,7 +5,7 @@ namespace CVA.Infrastructure.Postgres;
 /// <summary>
 /// A hosted service responsible for applying any pending Entity Framework Core migrations at application startup.
 /// </summary>
-public sealed class DbMigrationHostedService(IServiceProvider sp) : IHostedService
+internal sealed class DbMigrationHostedService(IServiceProvider sp) : IHostedService
 {
     /// <inheritdoc />
     public async Task StartAsync(CancellationToken ct)

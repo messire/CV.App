@@ -3,7 +3,7 @@
 /// <summary>
 /// Configuration options for Mongo database integration.
 /// </summary>
-public sealed class MongoOptions
+internal sealed class MongoOptions
 {
     /// <summary>
     /// Represents the configuration key used to retrieve Mongo options from the configuration system.

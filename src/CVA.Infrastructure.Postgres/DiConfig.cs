@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Configuration;
 
 namespace CVA.Infrastructure.Postgres;
 
@@ -12,11 +13,14 @@ public static class DiConfig
     extension(IServiceCollection services)
     {
         /// <summary>
-        /// Registers PostgreSQL database services and configuration into the provided service collection.
+        /// Registers Postgres database-related services and configurations into the dependency injection container.
         /// </summary>
-        /// <param name="pgOptions">The configuration options for the PostgreSQL database.</param>
-        public void RegisterPostgres(PostgresOptions pgOptions)
+        /// <param name="configuration">The application configuration that holds the necessary Postgres connection and settings.</param>
+        public void RegisterPostgres(IConfiguration configuration)
         {
+            var pgOptions = configuration.GetRequiredSection(PostgresOptions.Path).Get<PostgresOptions>();
+            ArgumentNullException.ThrowIfNull(pgOptions);
+
             services.AddDbContext<PostgresContext>(options =>
             {
                 options.EnableSensitiveDataLogging();

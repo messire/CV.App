@@ -12,7 +12,8 @@ public sealed class ApplicationTestCustomization : CompositeCustomization
     [
         new AutoMoqCustomization { ConfigureMembers = true },
         new BaseFixtureCustomization(),
-        new DomainMappingCustomization()
+        new DomainMappingCustomization(),
+        new ServiceMappingCustomization()
     ];
 
     /// <summary>

@@ -50,8 +50,8 @@ public class UserComparer : IEqualityComparer<User>
         hash.Add(obj.SummaryInfo);
         hash.Add(obj.Birthday);
 
-        obj.Skills?.ForEach(hash.Add);
-        obj.WorkExperience?.ForEach(item => hash.Add(item, WorkComp));
+        obj.Skills.ForEach(hash.Add);
+        obj.WorkExperience.ForEach(item => hash.Add(item, WorkComp));
 
         return hash.ToHashCode();
     }

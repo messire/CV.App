@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a MongoDB document for a user entity.
 /// </summary>
-public sealed class UserDocument
+internal sealed class UserDocument
 {
     /// <summary>
     /// The unique identifier for the user document.

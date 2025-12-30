@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides utility methods and functionality for mapping work-related data.
 /// </summary>
-public static class WorkMapping
+internal static class WorkMapping
 {
     extension(Work model)
     {
@@ -22,8 +22,8 @@ public static class WorkMapping
                 Location = model.Location,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
-                Achievements = model.Achievements?.ToArray(),
-                TechStack = model.TechStack?.ToArray()
+                Achievements = model.Achievements.ToArray(),
+                TechStack = model.TechStack.ToArray()
             };
     }
 
@@ -48,17 +48,15 @@ public static class WorkMapping
         /// A <see cref="Work"/> object containing information mapped from the <see cref="WorkDto"/> instance.
         /// </returns>
         public Work ToModel()
-            => new()
-            {
-                CompanyName = dto.CompanyName,
-                Role = dto.Role,
-                Description = dto.Description,
-                Location = dto.Location,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                Achievements = dto.Achievements?.ToList(),
-                TechStack = dto.TechStack?.ToList()
-            };
+            => Work.Create(
+                dto.CompanyName,
+                dto.Role,
+                dto.StartDate,
+                dto.EndDate,
+                dto.Description,
+                dto.Location,
+                dto.Achievements,
+                dto.TechStack);
     }
 
     extension(WorkDto[] dtos)

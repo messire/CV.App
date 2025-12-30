@@ -21,7 +21,7 @@ public record UserDto(string Name, string Surname, string Email)
     /// <summary>
     /// The birthdate of the user.
     /// </summary>
-    public DateOnly? Birthdate { get; init; }
+    public DateOnly? Birthday { get; init; }
 
     /// <summary>
     /// A brief summary or description of the user's profile or background.

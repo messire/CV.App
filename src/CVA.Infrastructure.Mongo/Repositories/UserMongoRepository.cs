@@ -6,14 +6,14 @@ namespace CVA.Infrastructure.Mongo;
 /// <summary>
 /// Provides an implementation of the <see cref="IUserRepository"/> interface for interacting with user data in a PostgreSQL database.
 /// </summary>
-public class UserMongoRepository(IMongoClient client, MongoOptions options) : IUserRepository
+internal class UserMongoRepository(IMongoClient client, MongoOptions options) : IUserRepository
 {
     private readonly IMongoCollection<UserDocument> _users = client
         .GetDatabase(options.DatabaseName)
         .GetCollection<UserDocument>("users");
 
     /// <inheritdoc />
-    public async Task<User> CreateAsync(User user, CancellationToken ct)
+    public async Task<User?> CreateAsync(User user, CancellationToken ct)
     {
         var userDocument = user.ToDocument();
         await _users.InsertOneAsync(userDocument, cancellationToken: ct);

@@ -1,17 +1,17 @@
-﻿namespace CVA.Domain.Models;
+﻿namespace CVA.Infrastructure.Postgres;
 
 /// <summary>
-/// Represents work experience associated with a user.
+/// EF Core owned an entity for work experience.
 /// </summary>
-public sealed class Work
+internal sealed class WorkEntity
 {
     /// <summary>
-    /// The name of the company where the work experience took place.
+    /// The name of the company associated with the work experience.
     /// </summary>
     public string? CompanyName { get; set; }
 
     /// <summary>
-    /// The position or title held by the user at the company.
+    /// The title or position held by the user at the company.
     /// </summary>
     public string? Role { get; set; }
 
@@ -21,12 +21,12 @@ public sealed class Work
     public string? Description { get; set; }
 
     /// <summary>
-    /// The location where the work experience took place.
+    /// The location where the work experience took place, such as a city, state, or remote.
     /// </summary>
     public string? Location { get; set; }
 
     /// <summary>
-    /// The start date of the work experience.
+    /// The start and end dates of the work experience.
     /// </summary>
     public DateOnly? StartDate { get; set; }
 
@@ -36,12 +36,12 @@ public sealed class Work
     public DateOnly? EndDate { get; set; }
 
     /// <summary>
-    /// A collection of accomplishments or milestones achieved during the work experience.
+    /// A collection of notable accomplishments or successes achieved during the work experience.
     /// </summary>
-    public List<string>? Achievements { get; set; }
+    public List<string> Achievements { get; set; } = [];
 
     /// <summary>
-    /// The collection of technologies, tools, or frameworks utilized in the work experience.
+    /// The collection of technologies, tools, or frameworks used in the work experience.
     /// </summary>
-    public List<string>? TechStack { get; set; }
+    public List<string> TechStack { get; set; } = [];
 }

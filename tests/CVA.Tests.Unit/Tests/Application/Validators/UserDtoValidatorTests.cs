@@ -95,14 +95,14 @@ public class UserDtoValidatorTests
         var futureDate = DateOnly.FromDateTime(DateTime.Now.AddDays(1));
         var userDto = baseDto with
         {
-            Birthdate = futureDate
+            Birthday = futureDate
         };
 
         // Act
         var result = _validator.TestValidate(userDto);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(dto => dto.Birthdate)
+        result.ShouldHaveValidationErrorFor(dto => dto.Birthday)
             .WithErrorMessage("Birthdate cannot be in the future");
     }
 
@@ -117,14 +117,14 @@ public class UserDtoValidatorTests
         // Arrange
         var userDto = baseDto with
         {
-            Birthdate = null
+            Birthday = null
         };
 
         // Act
         var result = _validator.TestValidate(userDto);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(dto => dto.Birthdate);
+        result.ShouldNotHaveValidationErrorFor(dto => dto.Birthday);
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ namespace CVA.Infrastructure.Postgres.Migrations
                     phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     birthday = table.Column<DateOnly>(type: "date", nullable: true),
                     summary_info = table.Column<string>(type: "text", nullable: true),
-                    skills = table.Column<List<string>>(type: "text[]", nullable: true)
+                    skills = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,8 +41,8 @@ namespace CVA.Infrastructure.Postgres.Migrations
                     location = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     start_date = table.Column<DateOnly>(type: "date", nullable: true),
                     end_date = table.Column<DateOnly>(type: "date", nullable: true),
-                    achievements = table.Column<List<string>>(type: "text[]", nullable: true),
-                    tech_stack = table.Column<List<string>>(type: "text[]", nullable: true),
+                    achievements = table.Column<List<string>>(type: "text[]", nullable: false),
+                    tech_stack = table.Column<List<string>>(type: "text[]", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

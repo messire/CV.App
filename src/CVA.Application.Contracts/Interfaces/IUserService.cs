@@ -10,15 +10,7 @@ public interface IUserService
     /// </summary>
     /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains an enumerable collection of <see cref="UserDto"/> if users are found.</returns>
-    Task<IEnumerable<UserDto>?> GetUsersAsync(CancellationToken ct);
-
-    /// <summary>
-    /// Creates a new user and returns the created user data transfer object.
-    /// </summary>
-    /// <param name="user">The user data transfer object containing the user's information to be created.</param>
-    /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains the created <see cref="UserDto"/> if the operation is successful; otherwise, null.</returns>
-    Task<UserDto?> CreateUserAsync(UserDto user, CancellationToken ct);
+    Task<Result<IEnumerable<UserDto>>> GetUsersAsync(CancellationToken ct);
 
     /// <summary>
     /// Retrieves a user data transfer object by its unique identifier.
@@ -26,7 +18,7 @@ public interface IUserService
     /// <param name="id">The unique identifier of the user to retrieve.</param>
     /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="UserDto"/> representing the user if found, or null if no user matches the specified identifier.</returns>
-    Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken ct);
+    Task<Result<UserDto>> GetUserByIdAsync(Guid id, CancellationToken ct);
 
     /// <summary>
     /// Updates an existing user with the provided data transfer object.
@@ -34,7 +26,7 @@ public interface IUserService
     /// <param name="user">The <see cref="UserDto"/> containing updated user information.</param>
     /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the updated <see cref="UserDto"/> if the update is successful, or null if the user does not exist.</returns>
-    Task<UserDto?> UpdateUserAsync(UserDto user, CancellationToken ct);
+    Task<Result<UserDto>> UpdateUserAsync(UserDto user, CancellationToken ct);
 
     /// <summary>
     /// Deletes a user with the specified identifier.
@@ -42,5 +34,13 @@ public interface IUserService
     /// <param name="id">The unique identifier of the user to be deleted.</param>
     /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the deleted <see cref="UserDto"/> if the operation is successful; otherwise, null.</returns>
-    Task<UserDto?> DeleteUserAsync(Guid id, CancellationToken ct);
+    Task<Result<UserDto>> DeleteUserAsync(Guid id, CancellationToken ct);
+
+    /// <summary>
+    /// Creates a new user and returns the created user data transfer object.
+    /// </summary>
+    /// <param name="user">The user data transfer object containing the user's information to be created.</param>
+    /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains the created <see cref="UserDto"/> if the operation is successful; otherwise, null.</returns>
+    Task<Result<UserDto>> CreateUserAsync(UserDto user, CancellationToken ct);
 }

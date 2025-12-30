@@ -3,7 +3,7 @@
 /// <summary>
 /// Validator class for <see cref="UserDto"/>.
 /// </summary>
-public class UserDtoValidator : AbstractValidator<UserDto>
+internal class UserDtoValidator : AbstractValidator<UserDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserDtoValidator"/> class.
@@ -23,9 +23,9 @@ public class UserDtoValidator : AbstractValidator<UserDto>
             .MaximumLength(100)
             .EmailAddress().WithMessage("A valid email address is required");
 
-        RuleFor(dto => dto.Birthdate)
+        RuleFor(dto => dto.Birthday)
             .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now))
-            .When(dto => dto.Birthdate.HasValue)
+            .When(dto => dto.Birthday.HasValue)
             .WithMessage("Birthdate cannot be in the future");
 
         RuleForEach(dto => dto.WorkExperience)

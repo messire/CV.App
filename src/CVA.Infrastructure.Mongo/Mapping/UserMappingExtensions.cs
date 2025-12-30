@@ -5,7 +5,7 @@ namespace CVA.Infrastructure.Mongo.Mapping;
 /// <summary>
 /// Mapping between domain models and Mongo persistence documents.
 /// </summary>
-public static class UserMongoMappingExtensions
+internal static class UserMongoMappingExtensions
 {
     /// <summary>
     /// Maps a domain <see cref="User"/> to a Mongo <see cref="UserDocument"/>.
@@ -20,7 +20,7 @@ public static class UserMongoMappingExtensions
             Phone = user.Phone,
             Birthday = user.Birthday,
             SummaryInfo = user.SummaryInfo,
-            Skills = user.Skills ?? [],
+            Skills = user.Skills.ToList(),
             WorkExperience = user.WorkExperience.Select(ToDocument).ToList(),
         };
 
@@ -36,44 +36,38 @@ public static class UserMongoMappingExtensions
             Location = work.Location,
             StartDate = work.StartDate,
             EndDate = work.EndDate,
-            Achievements = work.Achievements ?? [],
-            TechStack = work.TechStack ?? [],
+            Achievements = work.Achievements.ToList(),
+            TechStack = work.TechStack.ToList(),
         };
 
     /// <summary>
     /// Maps a Mongo <see cref="UserDocument"/> to a domain <see cref="User"/>.
     /// </summary>
     public static User ToDomain(this UserDocument document)
-    {
-        var user = new User
-        {
-            Id = document.Id,
-            Name = document.Name,
-            Surname = document.Surname,
-            Email = document.Email,
-            Phone = document.Phone,
-            Birthday = document.Birthday,
-            SummaryInfo = document.SummaryInfo,
-            Skills = document.Skills,
-        };
-
-        user.UpdateWorkExperience(document.WorkExperience.Select(ToDomain));
-        return user;
-    }
+        => User.FromPersistence(
+            id: document.Id,
+            name: document.Name,
+            surname: document.Surname,
+            email: document.Email,
+            phone: document.Phone,
+            birthday: document.Birthday,
+            summaryInfo: document.SummaryInfo,
+            skills: document.Skills,
+            workExperience: document.WorkExperience.Select(ToDomain)
+        );
 
     /// <summary>
     /// Maps a Mongo <see cref="WorkDocument"/> to a domain <see cref="Work"/>.
     /// </summary>
     public static Work ToDomain(this WorkDocument document)
-        => new()
-        {
-            CompanyName = document.CompanyName,
-            Role = document.Role,
-            Description = document.Description,
-            Location = document.Location,
-            StartDate = document.StartDate,
-            EndDate = document.EndDate,
-            Achievements = document.Achievements,
-            TechStack = document.TechStack,
-        };
+        => Work.Create(
+            companyName: document.CompanyName,
+            role: document.Role,
+            startDate: document.StartDate,
+            endDate: document.EndDate,
+            description: document.Description,
+            location: document.Location,
+            achievements: document.Achievements,
+            techStack: document.TechStack
+        );
 }

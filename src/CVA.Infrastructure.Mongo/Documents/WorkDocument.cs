@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a MongoDB document for a work experience entity.
 /// </summary>
-public sealed class WorkDocument
+internal sealed class WorkDocument
 {
     /// <summary>
     /// The name of the company where the individual gained work experience.

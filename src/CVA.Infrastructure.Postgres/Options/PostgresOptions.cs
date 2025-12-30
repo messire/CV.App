@@ -3,7 +3,7 @@
 /// <summary>
 /// Configuration options for Postgres database integration.
 /// </summary>
-public sealed class PostgresOptions
+internal sealed class PostgresOptions
 {
     /// <summary>
     /// Represents the configuration key used to retrieve Postgres options from the configuration system.

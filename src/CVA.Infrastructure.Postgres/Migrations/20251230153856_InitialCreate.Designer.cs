@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CVA.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(PostgresContext))]
-    [Migration("20251229215411_InitialCreate")]
+    [Migration("20251230153856_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace CVA.Infrastructure.Postgres.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CVA.Domain.Models.User", b =>
+            modelBuilder.Entity("CVA.Infrastructure.Postgres.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -54,6 +54,7 @@ namespace CVA.Infrastructure.Postgres.Migrations
                         .HasColumnName("phone");
 
                     b.PrimitiveCollection<List<string>>("Skills")
+                        .IsRequired()
                         .HasColumnType("text[]")
                         .HasColumnName("skills");
 
@@ -72,15 +73,16 @@ namespace CVA.Infrastructure.Postgres.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("CVA.Domain.Models.User", b =>
+            modelBuilder.Entity("CVA.Infrastructure.Postgres.UserEntity", b =>
                 {
-                    b.OwnsMany("CVA.Domain.Models.Work", "WorkExperience", b1 =>
+                    b.OwnsMany("CVA.Infrastructure.Postgres.WorkEntity", "WorkExperience", b1 =>
                         {
                             b1.Property<Guid>("id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
                             b1.PrimitiveCollection<List<string>>("Achievements")
+                                .IsRequired()
                                 .HasColumnType("text[]")
                                 .HasColumnName("achievements");
 
@@ -112,6 +114,7 @@ namespace CVA.Infrastructure.Postgres.Migrations
                                 .HasColumnName("start_date");
 
                             b1.PrimitiveCollection<List<string>>("TechStack")
+                                .IsRequired()
                                 .HasColumnType("text[]")
                                 .HasColumnName("tech_stack");
 

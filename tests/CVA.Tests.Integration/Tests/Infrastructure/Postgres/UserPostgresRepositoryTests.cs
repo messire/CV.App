@@ -3,7 +3,6 @@ using CVA.Infrastructure.Postgres;
 using CVA.Tests.Common;
 using CVA.Tests.Common.Comparers;
 using CVA.Tests.Integration.Fixtures;
-using Microsoft.EntityFrameworkCore;
 
 namespace CVA.Tests.Integration.Tests.Infrastructure.Postgres;
 
@@ -13,13 +12,12 @@ namespace CVA.Tests.Integration.Tests.Infrastructure.Postgres;
 [Trait(Layer.Infrastructure, Category.Repository)]
 public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : PostgresTestBase(fixture)
 {
-    private static UserPostgresRepository CreateRepository(PostgresContext context) => new(context);
     private static readonly UserComparer UserComp = new();
 
     /// <summary>
-    /// Purpose: Verify that CreateAsync correctly persists a user entity to the database.
-    /// Should: Assign an ID to the user and ensure all fields are correctly saved.
-    /// When: A new user object is passed to the repository.
+    /// Purpose: Verify repository persists a new user.
+    /// When: CreateAsync is called with a valid user.
+    /// Should: Persist the user and return it back from database with the same state.
     /// </summary>
     [Fact]
     public async Task CreateAsync_ShouldPersistUser()
@@ -30,35 +28,35 @@ public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : Postg
         var repository = CreateRepository(context);
 
         // Act
-        var result = await repository.CreateAsync(user, Cts.Token);
+        var created = await repository.CreateAsync(user, Cts.Token);
 
         // Assert
-        var dbUser = await GetFreshUser(result.Id);
+        Assert.NotNull(created);
+        var dbUser = await GetFreshUserAsync(created.Id, Cts.Token);
         Assert.NotNull(dbUser);
         Assert.Equal(user, dbUser, UserComp);
     }
 
     /// <summary>
-    /// Purpose: Verify that GetByIdAsync retrieves the correct user including related data.
-    /// Should: Return the user with populated work experience.
-    /// When: A valid existing user ID is provided.
+    /// Purpose: Verify repository returns a user by id including work experience.
+    /// When: GetByIdAsync is called for an existing user id.
+    /// Should: Return the user with work experience loaded.
     /// </summary>
     [Fact]
     public async Task GetByIdAsync_ShouldReturnUserWithWorkExperience()
     {
         // Arrange
         var seedUser = DataGenerator.CreateUser();
-        await using (var setupContext = CreateContext())
-        {
-            await setupContext.Users.AddAsync(seedUser);
-            await setupContext.SaveChangesAsync();
-        }
+        var created = await SeedUserAsync(seedUser, Cts.Token);
+
+        // Assert
+        Assert.NotNull(created);
 
         await using var context = CreateContext();
         var repository = CreateRepository(context);
 
         // Act
-        var result = await repository.GetByIdAsync(seedUser.Id, Cts.Token);
+        var result = await repository.GetByIdAsync(created.Id, Cts.Token);
 
         // Assert
         Assert.NotNull(result);
@@ -66,82 +64,78 @@ public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : Postg
     }
 
     /// <summary>
-    /// Purpose: Verify that UpdateAsync updates both basic fields and related collections.
-    /// Should: Reflect changes in the database for name, surname, and work experience.
-    /// When: An existing user entity is modified and updated.
+    /// Purpose: Verify repository updates scalar fields and work experience.
+    /// When: UpdateAsync is called for an existing user with modified fields.
+    /// Should: Persist updated fields and replace work experience collection.
     /// </summary>
     [Fact]
     public async Task UpdateAsync_ShouldUpdateFieldsAndWorkExperience()
     {
         // Arrange
         var initialUser = DataGenerator.CreateUser();
+        var created = await SeedUserAsync(initialUser, Cts.Token);
         var newName = DataGenerator.CreateString();
         var newSurname = DataGenerator.CreateString();
+        var newWork = Work.Create("Fact Corp");
 
-        await using (var setupContext = CreateContext())
-        {
-            await setupContext.Users.AddAsync(initialUser);
-            await setupContext.SaveChangesAsync();
-        }
+        // Assert
+        Assert.NotNull(created);
+
+        created.ChangeName(newName, newSurname);
+        created.ReplaceWorkExperience([newWork]);
 
         await using var context = CreateContext();
         var repository = CreateRepository(context);
 
-        initialUser.Name = newName;
-        initialUser.Surname = newSurname;
-        initialUser.UpdateWorkExperience([new Work { CompanyName = "Fact Corp" }]);
-
         // Act
-        await repository.UpdateAsync(initialUser, Cts.Token);
+        await repository.UpdateAsync(created, Cts.Token);
 
         // Assert
-        var dbUser = await GetFreshUser(initialUser.Id);
-        Assert.Equal(newName, dbUser!.Name);
+        var dbUser = await GetFreshUserAsync(created.Id, Cts.Token);
+        Assert.NotNull(dbUser);
+        Assert.Equal(newName, dbUser.Name);
+        Assert.Equal(newSurname, dbUser.Surname);
         Assert.Equal("Fact Corp", dbUser.WorkExperience.FirstOrDefault()?.CompanyName);
     }
 
     /// <summary>
-    /// Purpose: Verify that DeleteAsync correctly removes a user from the database.
-    /// Should: Ensure the user no longer exists in the context after deletion.
-    /// When: A valid user ID is provided for removal.
+    /// Purpose: Verify repository deletes a user.
+    /// When: DeleteAsync is called for an existing user id.
+    /// Should: Remove the user so it cannot be loaded afterwards.
     /// </summary>
     [Fact]
     public async Task DeleteAsync_ShouldRemoveUser()
     {
         // Arrange
         var user = DataGenerator.CreateUser();
-        await using (var setupContext = CreateContext())
-        {
-            await setupContext.Users.AddAsync(user);
-            await setupContext.SaveChangesAsync();
-        }
+        var created = await SeedUserAsync(user, Cts.Token);
 
         await using var context = CreateContext();
         var repository = CreateRepository(context);
 
+        //Assert
+        Assert.NotNull(created);
+
         // Act
-        await repository.DeleteAsync(user.Id, Cts.Token);
+        await repository.DeleteAsync(created.Id, Cts.Token);
 
         // Assert
-        var dbUser = await GetFreshUser(user.Id);
+        var dbUser = await GetFreshUserAsync(created.Id, Cts.Token);
         Assert.Null(dbUser);
     }
 
     /// <summary>
-    /// Purpose: Verify that GetAllAsync retrieves all users from the repository.
-    /// Should: Return a collection containing all seeded users.
-    /// When: Multiple users exist in the database.
+    /// Purpose: Verify repository returns all users.
+    /// When: GetAllAsync is called and multiple users exist.
+    /// Should: Return the same amount of users as stored.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_ShouldReturnUsers()
     {
         // Arrange
-        var users = DataGenerator.CreateUsers(2);
-        await using (var setupContext = CreateContext())
-        {
-            await setupContext.Users.AddRangeAsync(users);
-            await setupContext.SaveChangesAsync();
-        }
+        var users = DataGenerator.CreateUsers(2).ToArray();
+        foreach (var user in users)
+            await SeedUserAsync(user, Cts.Token);
 
         await using var context = CreateContext();
         var repository = CreateRepository(context);
@@ -154,9 +148,9 @@ public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : Postg
     }
 
     /// <summary>
-    /// Purpose: Verify that GetByIdAsync returns null when user does not exist.
-    /// Should: Return null without throwing an exception.
-    /// When: A non-existent Guid is provided.
+    /// Purpose: Verify repository returns null for missing users.
+    /// When: GetByIdAsync is called with a non-existent id.
+    /// Should: Return null.
     /// </summary>
     [Fact]
     public async Task GetByIdAsync_ShouldReturnNull_WhenUserDoesNotExist()
@@ -173,9 +167,9 @@ public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : Postg
     }
 
     /// <summary>
-    /// Purpose: Ensure DeleteAsync does not fail when trying to delete a non-existent user.
-    /// Should: Complete successfully (idempotent behavior).
-    /// When: An invalid ID is passed to DeleteAsync.
+    /// Purpose: Verify delete is idempotent.
+    /// When: DeleteAsync is called with a non-existent id.
+    /// Should: Not throw.
     /// </summary>
     [Fact]
     public async Task DeleteAsync_ShouldNotThrow_WhenUserDoesNotExist()
@@ -184,17 +178,10 @@ public sealed class UserPostgresRepositoryTests(PostgresFixture fixture) : Postg
         await using var context = CreateContext();
         var repository = CreateRepository(context);
 
-        // Act & Assert
+        // Act
         var exception = await Record.ExceptionAsync(() => repository.DeleteAsync(Guid.CreateVersion7(), Cts.Token));
-        Assert.Null(exception);
-    }
 
-    private async Task<User?> GetFreshUser(Guid id)
-    {
-        await using var checkContext = CreateContext();
-        return await checkContext.Users
-            .Include(user => user.WorkExperience)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(user => user.Id == id);
+        // Assert
+        Assert.Null(exception);
     }
 }

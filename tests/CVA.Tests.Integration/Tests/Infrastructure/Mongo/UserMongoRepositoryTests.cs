@@ -33,6 +33,7 @@ public sealed class UserMongoRepositoryTests(MongoFixture fixture) : MongoTestBa
         var result = await repository.CreateAsync(user, Cts.Token);
 
         // Assert
+        Assert.NotNull(result);
         var dbUser = await GetFreshUser(result.Id);
         Assert.NotNull(dbUser);
         Assert.Equal(user, dbUser, UserComp);
@@ -73,13 +74,11 @@ public sealed class UserMongoRepositoryTests(MongoFixture fixture) : MongoTestBa
         await GetCollection().InsertOneAsync(initialUser.ToDocument(), cancellationToken: Cts.Token);
 
         var repository = CreateRepository();
-
         var newName = DataGenerator.CreateString();
         var newSurname = DataGenerator.CreateString();
 
-        initialUser.Name = newName;
-        initialUser.Surname = newSurname;
-        initialUser.UpdateWorkExperience([new Work { CompanyName = "Mongo Corp" }]);
+        initialUser.ChangeName(newName, newSurname);
+        initialUser.ReplaceWorkExperience([Work.Create("Mongo Corp")]);
 
         // Act
         await repository.UpdateAsync(initialUser, Cts.Token);

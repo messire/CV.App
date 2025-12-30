@@ -4,15 +4,13 @@ using CVA.Infrastructure.Common;
 using CVA.Infrastructure.Mongo;
 using CVA.Infrastructure.Postgres;
 using CVA.Tools.Common;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 
 namespace CVA.Presentation.Web;
 
 /// <summary>
 /// Provides a collection of extension methods to support dependency injection in the application.
 /// </summary>
-public static class DiExtensions
+internal static class DiExtensions
 {
     extension(WebApplicationBuilder builder)
     {
@@ -39,7 +37,7 @@ public static class DiExtensions
         /// </summary>
         public void RegisterInnerServices()
         {
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.RegisterUserService();
         }
 
         /// <summary>
@@ -52,10 +50,10 @@ public static class DiExtensions
             switch (dbType.Type)
             {
                 case DatabaseType.Mongo:
-                    builder.RegisterMongoDb();
+                    builder.Services.RegisterMongo(builder.Configuration);
                     break;
                 case DatabaseType.Postgres:
-                    builder.RegisterPostgresDb();
+                    builder.Services.RegisterPostgres(builder.Configuration);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dbType.Type), dbType.Type, "Unsupported database type");
@@ -69,25 +67,6 @@ public static class DiExtensions
         {
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssemblyContaining<IValidatorMarker>(); 
-        }
-        /// <summary>
-        /// Registers the necessary services for MongoDB database integration.
-        /// </summary>
-        private void RegisterMongoDb()
-        {
-            var options = builder.Configuration.GetRequiredSection(MongoOptions.Path).Get<MongoOptions>();
-            ArgumentNullException.ThrowIfNull(options);
-            builder.Services.RegisterMongo(options);
-        }
-
-        /// <summary>
-        /// Registers the necessary services for PostgreSQL database integration.
-        /// </summary>
-        private void RegisterPostgresDb()
-        {
-            var options = builder.Configuration.GetRequiredSection(PostgresOptions.Path).Get<PostgresOptions>();
-            ArgumentNullException.ThrowIfNull(options);
-            builder.Services.RegisterPostgres(options);
         }
     }
 }

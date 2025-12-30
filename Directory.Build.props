@@ -24,8 +24,9 @@
     <!-- Visibility -->
     <ItemGroup>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-        <InternalsVisibleTo Include="CVA.Tests.Unit"/>
+        <InternalsVisibleTo Include="CVA.Tests.Common"/>
         <InternalsVisibleTo Include="CVA.Tests.Integration"/>
+        <InternalsVisibleTo Include="CVA.Tests.Unit"/>
     </ItemGroup>
 
 </Project>

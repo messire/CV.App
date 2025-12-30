@@ -3,10 +3,10 @@
 /// <summary>
 /// Configures the entity mapping for the <c>User</c> class within the database context.
 /// </summary>
-public class UserConfiguration : IEntityTypeConfiguration<User>
+internal class UserConfiguration : IEntityTypeConfiguration<UserEntity>
 {
     /// <inheritdoc />
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.ToTable("users");
 
@@ -37,14 +37,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.Birthday)
             .HasColumnName(nameof(User.Birthday).ToSnakeCase())
-            .HasColumnType("date");
+            .HasColumnType(DatabaseTypes.DateOnly);
 
         builder.Property(user => user.SummaryInfo)
             .HasColumnName(nameof(User.SummaryInfo).ToSnakeCase());
 
         builder.Property(user => user.Skills)
             .HasColumnName(nameof(User.Skills).ToSnakeCase())
-            .HasColumnType("text[]");
+            .HasColumnType(DatabaseTypes.TextArray);
 
         builder.OwnsMany(user => user.WorkExperience, WorkConfiguration.Configure);
     }

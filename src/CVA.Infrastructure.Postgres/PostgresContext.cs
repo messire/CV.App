@@ -1,13 +1,13 @@
 ﻿namespace CVA.Infrastructure.Postgres;
 
 /// <inheritdoc />
-public sealed class PostgresContext(DbContextOptions<PostgresContext> options)
+internal sealed class PostgresContext(DbContextOptions<PostgresContext> options)
     : DbContext(options)
 {
     /// <summary>
     /// Represents the collection of users in the database context.
     /// </summary>
-    public DbSet<User> Users { get; set; }
+    public DbSet<UserEntity> Users { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)

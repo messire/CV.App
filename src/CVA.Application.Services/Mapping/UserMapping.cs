@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides mapping functionalities related to user entities within the application.
 /// </summary>
-public static class UserMapping
+internal static class UserMapping
 {
     extension(User model)
     {
@@ -18,9 +18,9 @@ public static class UserMapping
             {
                 Id = model.Id,
                 Phone = model.Phone,
-                Birthdate = model.Birthday,
+                Birthday = model.Birthday,
                 SummaryInfo = model.SummaryInfo,
-                Skills = model.Skills?.ToArray(),
+                Skills = model.Skills.ToArray(),
                 WorkExperience = model.WorkExperience.ToDto(),
             };
     }
@@ -47,18 +47,10 @@ public static class UserMapping
         /// </returns>
         public User ToModel()
         {
-            var user = new User()
-            {
-                Id = dto.Id ?? Guid.CreateVersion7(),
-                Name = dto.Name,
-                Surname = dto.Surname,
-                Email = dto.Email,
-                Phone = dto.Phone,
-                Birthday = dto.Birthdate,
-                SummaryInfo = dto.SummaryInfo,
-                Skills = dto.Skills?.ToList(),
-            };
-            user.UpdateWorkExperience(dto.WorkExperience?.ToModel() ?? []);
+            var user  = User.Create(dto.Name, dto.Surname, dto.Email);
+            user.UpdateProfile(dto.Phone, dto.Birthday, dto.SummaryInfo);
+            user.ReplaceSkills(dto.Skills);
+            user.ReplaceWorkExperience(dto.WorkExperience?.ToModel());
             return user;
         }
     }

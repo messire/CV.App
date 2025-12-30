@@ -3,7 +3,7 @@
 /// <summary>
 /// Validator class for <see cref="WorkDto"/>.
 /// </summary>
-public class WorkDtoValidator : AbstractValidator<WorkDto>
+internal class WorkDtoValidator : AbstractValidator<WorkDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="WorkDtoValidator"/> class.

@@ -1,4 +1,5 @@
-﻿using CVA.Infrastructure.Mongo;
+﻿using CVA.Domain.Interfaces;
+using CVA.Infrastructure.Mongo;
 using CVA.Tests.Integration.Fixtures;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -26,7 +27,7 @@ public abstract class MongoTestBase : IAsyncLifetime
     /// <summary>
     /// Represents the configuration options for integrating with a MongoDB database.
     /// </summary>
-    protected readonly MongoOptions MongoOptions;
+    internal readonly MongoOptions MongoOptions;
 
     /// <summary>
     /// Represents a cancellation token source.
@@ -52,7 +53,7 @@ public abstract class MongoTestBase : IAsyncLifetime
     /// Initializes a new instance of the <see cref="MongoTestBase"/> class with the provided database fixture.
     /// </summary>
     /// <param name="fixture">The database fixture used for setting up MongoDB integration testing environments.</param>
-    protected MongoTestBase(MongoFixture fixture)
+    protected internal MongoTestBase(MongoFixture fixture)
     {
         Fixture = fixture;
         MongoOptions = Integration.Mongo.Tools.GetConfiguration(Fixture.ConnectionString);
@@ -64,8 +65,8 @@ public abstract class MongoTestBase : IAsyncLifetime
     /// Creates and initializes a new instance of the <see cref="UserMongoRepository"/> class.
     /// </summary>
     /// <returns></returns>
-    protected UserMongoRepository CreateRepository()
-        => new(MongoClient, MongoOptions);
+    protected IUserRepository CreateRepository()
+        => new UserMongoRepository(MongoClient, MongoOptions);
 
     /// <inheritdoc />
     public virtual async Task InitializeAsync()

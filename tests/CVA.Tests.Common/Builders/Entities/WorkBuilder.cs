@@ -16,17 +16,16 @@ internal sealed class WorkBuilder : ISpecimenBuilder
     public object Create(object request, ISpecimenContext context)
     {
         if (request is not Type type || type != typeof(Work)) return new NoSpecimen();
-
-        return new Work
-        {
-            CompanyName = (string)context.Resolve(typeof(string)),
-            Role = (string)context.Resolve(typeof(string)),
-            Description = (string)context.Resolve(typeof(string)),
-            Location = (string)context.Resolve(typeof(string)),
-            StartDate = (DateOnly)context.Resolve(typeof(DateOnly)),
-            EndDate = (DateOnly)context.Resolve(typeof(DateOnly)),
-            Achievements = ((string[])context.Resolve(typeof(string[]))).ToList(),
-            TechStack = ((string[])context.Resolve(typeof(string[]))).ToList()
-        };
+        
+        return Work.Create(
+            companyName: (string)context.Resolve(typeof(string)),
+            role: (string)context.Resolve(typeof(string)),
+            startDate: (DateOnly)context.Resolve(typeof(DateOnly)),
+            endDate: (DateOnly)context.Resolve(typeof(DateOnly)),
+            description: (string)context.Resolve(typeof(string)),
+            location: (string)context.Resolve(typeof(string)),
+            achievements: (string[])context.Resolve(typeof(string[])),
+            techStack: ((string[])context.Resolve(typeof(string[]))).ToList()
+        );
     }
 }

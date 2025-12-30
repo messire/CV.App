@@ -24,7 +24,7 @@ internal sealed class UserDtoBuilder : ISpecimenBuilder
         return new UserDto(name, surname, email)
         {
             Id = (Guid)context.Resolve(typeof(Guid)),
-            Birthdate = (DateOnly)context.Resolve(typeof(DateOnly)),
+            Birthday = (DateOnly)context.Resolve(typeof(DateOnly)),
             Phone = (string)context.Resolve(typeof(string)),
             SummaryInfo = (string)context.Resolve(typeof(string)),
             Skills = (string[])context.Resolve(typeof(string[])),

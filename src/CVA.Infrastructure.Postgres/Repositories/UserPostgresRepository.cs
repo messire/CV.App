@@ -3,58 +3,68 @@
 /// <summary>
 /// Provides an implementation of the <see cref="IUserRepository"/> interface for interacting with user data in a PostgreSQL database.
 /// </summary>
-public class UserPostgresRepository(PostgresContext context) : IUserRepository
+internal class UserPostgresRepository(PostgresContext context) : IUserRepository
 {
     /// <inheritdoc />
-    public async Task<User> CreateAsync(User user, CancellationToken ct)
+    public async Task<User?> CreateAsync(User user, CancellationToken ct)
     {
-        await context.Users.AddAsync(user, ct);
+        var entity = user.ToEntity();
+        await context.Users.AddAsync(entity, ct);
         await context.SaveChangesAsync(ct);
-        return user;
+        return entity.ToDomain();
     }
 
     /// <inheritdoc />
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken ct)
-        => await context.Users
-            .Include(user => user.WorkExperience)
-            .FirstOrDefaultAsync(user => user.Id == id, ct);
+    {
+        var entity = await context.Users
+            .Include(userEntity => userEntity.WorkExperience)
+            .FirstOrDefaultAsync(userEntity => userEntity.Id == id, ct);
+
+        return entity?.ToDomain();
+    }
 
     /// <inheritdoc />
     public async Task<IEnumerable<User>> GetAllAsync(CancellationToken ct)
-        => await context.Users
-            .Include(user => user.WorkExperience)
+    {
+        var entities = await context.Users
+            .Include(userEntity => userEntity.WorkExperience)
             .ToListAsync(ct);
+
+        return entities.Select(userEntity => userEntity.ToDomain());
+    }
 
     /// <inheritdoc />
     public async Task<User?> UpdateAsync(User updatedUser, CancellationToken ct)
     {
-        var existingUser = await context.Users
-            .Include(user => user.WorkExperience)
-            .FirstOrDefaultAsync(user => user.Id == updatedUser.Id, ct);
+        var entity = await context.Users
+            .Include(userEntity => userEntity.WorkExperience)
+            .FirstOrDefaultAsync(userEntity => userEntity.Id == updatedUser.Id, ct);
 
-        if (existingUser is null) return null;
+        if (entity is null) return null;
 
-        existingUser.Name = updatedUser.Name;
-        existingUser.Surname = updatedUser.Surname;
-        existingUser.Email = updatedUser.Email;
-        existingUser.Phone = updatedUser.Phone;
-        existingUser.Birthday = updatedUser.Birthday;
-        existingUser.SummaryInfo = updatedUser.SummaryInfo;
-        existingUser.Skills = updatedUser.Skills;
-        existingUser.UpdateWorkExperience(updatedUser.WorkExperience);
+        entity.Name = updatedUser.Name;
+        entity.Surname = updatedUser.Surname;
+        entity.Email = updatedUser.Email;
+        entity.Phone = updatedUser.Phone;
+        entity.Birthday = updatedUser.Birthday;
+        entity.SummaryInfo = updatedUser.SummaryInfo;
+        entity.Skills = updatedUser.Skills.ToList();
+        entity.WorkExperience.Clear();
+        entity.WorkExperience.AddRange(updatedUser.WorkExperience.Select(work => work.ToEntity()));
 
         await context.SaveChangesAsync(ct);
-        return existingUser;
+        return entity.ToDomain();
     }
 
     /// <inheritdoc />
     public async Task<User?> DeleteAsync(Guid id, CancellationToken ct)
     {
-        var user = await context.Users.FindAsync([id], ct);
-        if (user is null) return null;
+        var entity = await context.Users.FirstOrDefaultAsync(userEntity => userEntity.Id == id, ct);
+        if (entity is null) return null;
 
-        context.Users.Remove(user);
+        context.Users.Remove(entity);
         await context.SaveChangesAsync(ct);
-        return user;
+        return entity.ToDomain();
     }
 }

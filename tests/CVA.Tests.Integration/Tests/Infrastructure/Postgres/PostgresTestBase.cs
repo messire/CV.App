@@ -1,4 +1,5 @@
-﻿using CVA.Infrastructure.Postgres;
+﻿using CVA.Domain.Models;
+using CVA.Infrastructure.Postgres;
 using CVA.Tests.Integration.Fixtures;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,24 +12,23 @@ namespace CVA.Tests.Integration.Tests.Infrastructure.Postgres;
 public abstract class PostgresTestBase : IAsyncLifetime
 {
     /// <summary>
-    /// Represents a container or setup context for test data or test dependencies.
+    /// Testcontainer-backed fixture (connection string, lifecycle, etc.).
     /// </summary>
     protected readonly PostgresFixture Fixture;
 
     /// <summary>
-    /// Encapsulates configuration options and settings required to connect to a PostgreSQL database.
+    /// Connection options for PostgreSQL.
     /// </summary>
-    protected readonly PostgresOptions PostgresOptions;
+    internal readonly PostgresOptions PostgresOptions;
 
     /// <summary>
-    /// Represents a cancellation token source used to propagate notifications that operations should be canceled.
+    /// Cancellation token source for tests.
     /// </summary>
     protected readonly CancellationTokenSource Cts;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PostgresTestBase"/> class.
     /// </summary>
-    /// <param name="fixture">The fixture used for test setup and data management.</param>
     protected PostgresTestBase(PostgresFixture fixture)
     {
         Fixture = fixture;
@@ -37,11 +37,10 @@ public abstract class PostgresTestBase : IAsyncLifetime
     }
 
     /// <summary>
-    /// Creates and initializes a new context for the application, which is used to manage
-    /// configuration, services, or other resources required for execution.
+    /// Creates a new EF Core context instance.
+    /// Purpose: keep tests isolated from DI setup.
     /// </summary>
-    /// <returns>An object representing the newly created context.</returns>
-    protected PostgresContext CreateContext()
+    internal PostgresContext CreateContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<PostgresContext>();
         optionsBuilder.UseNpgsql(PostgresOptions.Connection);
@@ -49,23 +48,44 @@ public abstract class PostgresTestBase : IAsyncLifetime
     }
 
     /// <summary>
-    /// Asynchronously initializes the necessary components or services required for the application's operation.
+    /// Creates a repository instance for the given context.
     /// </summary>
-    /// <returns>A task that represents the completion of the initialization process.</returns>
-    public virtual async Task InitializeAsync()
+    internal static UserPostgresRepository CreateRepository(PostgresContext context) => new(context);
+
+    /// <summary>
+    /// Seeds a user using repository API.
+    /// Purpose: keep tests independent from EF persistence model (entities).
+    /// </summary>
+    internal async Task<User?> SeedUserAsync(User user, CancellationToken ct)
     {
         await using var context = CreateContext();
-        await context.Database.MigrateAsync();
-        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE;");
+        var repository = CreateRepository(context);
+        return await repository.CreateAsync(user, ct);
     }
 
     /// <summary>
-    /// Asynchronously releases all resources used by the current instance of the class,
-    /// ensuring proper cleanup and freeing of unmanaged resources.
+    /// Reads user from the database using a new context.
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
-    public async Task DisposeAsync()
+    internal async Task<User?> GetFreshUserAsync(Guid id, CancellationToken ct)
     {
-        await Cts.CancelAsync();
+        await using var context = CreateContext();
+        var repository = CreateRepository(context);
+        return await repository.GetByIdAsync(id, ct);
     }
+
+    /// <summary>
+    /// Initializes database schema and clears tables before each test.
+    /// </summary>
+    public virtual async Task InitializeAsync()
+    {
+        await using var context = CreateContext();
+        await context.Database.MigrateAsync(Cts.Token);
+        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE;", Cts.Token);
+    }
+
+    /// <summary>
+    /// Cancels test token source.
+    /// </summary>
+    public Task DisposeAsync()
+        => Cts.CancelAsync();
 }

@@ -5,7 +5,7 @@ namespace CVA.Presentation.Web;
 /// <summary>
 /// Provides extension methods for application-level operations in the CVA.Presentation.Web namespace.
 /// </summary>
-public static class AppExtensions
+internal static class AppExtensions
 {
     extension(WebApplication app)
     {
@@ -14,7 +14,7 @@ public static class AppExtensions
         /// </summary>
         public void ConfigureDevEnv()
         {
-            if (!app.Environment.IsDevelopment()) return;
+            if (!app.Environment.IsDevelopment() && !app.Configuration.GetValue<bool>("EnableOpenApi")) return;
             app.MapOpenApi();
             app.MapScalarApiReference("/docs");
         }

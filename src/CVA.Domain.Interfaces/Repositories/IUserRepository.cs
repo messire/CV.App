@@ -13,7 +13,7 @@ public interface IUserRepository
     /// <param name="user">The user entity to be added to the database.</param>
     /// <param name="ct">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>The newly created user entity after being saved in the database.</returns>
-    Task<User> CreateAsync(User user, CancellationToken ct);
+    Task<User?> CreateAsync(User user, CancellationToken ct);
 
     /// <summary>
     /// Retrieves a user from the database by their unique identifier asynchronously.

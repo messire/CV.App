@@ -45,8 +45,8 @@ public class WorkComparer : IEqualityComparer<Work>
         hash.Add(obj.StartDate);
         hash.Add(obj.EndDate);
 
-        obj.Achievements?.ForEach(hash.Add);
-        obj.TechStack?.ForEach(hash.Add);
+        obj.Achievements.ForEach(hash.Add);
+        obj.TechStack.ForEach(hash.Add);
 
         return hash.ToHashCode();
     }

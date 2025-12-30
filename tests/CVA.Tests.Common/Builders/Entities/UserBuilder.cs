@@ -21,19 +21,15 @@ internal sealed class UserBuilder : ISpecimenBuilder
         var surname = context.Resolve(new SeededRequest(typeof(string), nameof(User.Surname))).ToString()?.Split('-')[0];
         var randomNumber = Math.Abs((long)context.Resolve(typeof(long))).ToString();
         var phone = "+" + (randomNumber.Length > 11 ? randomNumber[..11] : randomNumber);
-        
-        var user = new User
-        {
-            Id = (Guid)context.Resolve(typeof(Guid)),
-            Name = name ?? nameof(User.Name),
-            Surname = surname ?? nameof(User.Surname),
-            Email = $"{name}.{surname}@test.test".ToLower(),
-            Phone = phone,
-            Birthday = (DateOnly?)context.Resolve(typeof(DateOnly?)),
-            SummaryInfo = (string)context.Resolve(typeof(string)),
-            Skills = ((string[])context.Resolve(typeof(string[]))).ToList()
-        };
-        user.UpdateWorkExperience(((Work[])context.Resolve(typeof(Work[]))).ToList());
+        var birthday = (DateOnly?)context.Resolve(typeof(DateOnly?));
+        var summaryInfo = (string)context.Resolve(typeof(string));
+        var skills = ((string[])context.Resolve(typeof(string[]))).ToList();
+        var workList = ((Work[])context.Resolve(typeof(Work[]))).ToList();
+        var user  = User.Create(name ?? nameof(User.Name), surname ?? nameof(User.Surname), $"{name}.{surname}@test.test".ToLower());
+
+        user.UpdateProfile(phone, birthday, summaryInfo);
+        user.ReplaceSkills(skills);
+        user.ReplaceWorkExperience(workList);
         return user;
     }
 }
