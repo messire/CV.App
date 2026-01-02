@@ -31,6 +31,11 @@ internal sealed class UserDocument
     public string? Phone { get; set; }
 
     /// <summary>
+    /// The URL of the user's profile picture.
+    /// </summary>
+    public string? Photo { get; init; }
+
+    /// <summary>
     /// The date of birth of the user.
     /// </summary>
     public DateOnly? Birthday { get; set; }

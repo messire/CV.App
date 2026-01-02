@@ -73,6 +73,7 @@ internal class UserService(IUserRepository userRepository) : IUserService
             user.ChangeName(updatedUser.Name, updatedUser.Surname);
             user.ChangeEmail(updatedUser.Email);
             user.UpdateProfile(updatedUser.Phone, updatedUser.Birthday, updatedUser.SummaryInfo);
+            user.UpdatePhoto(updatedUser.Photo);
             user.ReplaceSkills(updatedUser.Skills);
             user.ReplaceWorkExperience(updatedUser.WorkExperience?.ToModel());
 

@@ -35,6 +35,11 @@ public sealed partial class User : AggregateRoot
     public string? Phone { get; private set; }
 
     /// <summary>
+    /// Optional URL of the user's profile picture.
+    /// </summary>
+    public string? Photo { get; private set; }
+
+    /// <summary>
     /// Optional birthday.
     /// </summary>
     public DateOnly? Birthday { get; private set; }

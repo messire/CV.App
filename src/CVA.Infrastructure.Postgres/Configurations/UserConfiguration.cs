@@ -35,6 +35,10 @@ internal class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .HasColumnName(nameof(User.Phone).ToSnakeCase())
             .HasMaxLength(20);
 
+        builder.Property(user => user.Photo)
+            .HasColumnName(nameof(User.Photo).ToSnakeCase())
+            .HasMaxLength(255);
+
         builder.Property(user => user.Birthday)
             .HasColumnName(nameof(User.Birthday).ToSnakeCase())
             .HasColumnType(DatabaseTypes.DateOnly);

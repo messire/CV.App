@@ -30,6 +30,7 @@ public class UserComparer : IEqualityComparer<User>
                string.Equals(x.Surname, y.Surname) &&
                string.Equals(x.Email, y.Email) &&
                string.Equals(x.Phone, y.Phone) &&
+               string.Equals(x.Photo, y.Photo) &&
                string.Equals(x.SummaryInfo, y.SummaryInfo) &&
                x.Birthday == y.Birthday &&
                x.Skills.ScrambledEquals(y.Skills) &&
@@ -47,6 +48,7 @@ public class UserComparer : IEqualityComparer<User>
         hash.Add(obj.Surname);
         hash.Add(obj.Email);
         hash.Add(obj.Phone);
+        hash.Add(obj.Photo);
         hash.Add(obj.SummaryInfo);
         hash.Add(obj.Birthday);
 
