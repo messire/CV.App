@@ -45,11 +45,21 @@ internal class UserService(IUserRepository userRepository) : IUserService
     }
 
     /// <inheritdoc />
-    public async Task<Result<UserDto>> UpdateUserAsync(UserDto updatedUser, CancellationToken ct)
+    public async Task<Result<UserDto>> UpdateUserAsync(Guid id, UserDto updatedUser, CancellationToken ct)
     {
+        if (id == Guid.Empty)
+        {
+            return Result<UserDto>.Fail($"Invalid route id '{id}' value.");
+        }
+
         if (updatedUser.Id is null || updatedUser.Id == Guid.Empty)
         {
-            return Result<UserDto>.Fail($"Invalid id '{updatedUser.Id}' value.");
+            return Result<UserDto>.Fail($"Invalid body id '{updatedUser.Id}' value.");
+        }
+
+        if (updatedUser.Id.Value != id)
+        {
+            return Result<UserDto>.Fail($"Route id '{id}' does not match body id '{updatedUser.Id}'.");
         }
 
         try

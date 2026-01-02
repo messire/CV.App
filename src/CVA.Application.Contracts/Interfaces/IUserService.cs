@@ -23,10 +23,11 @@ public interface IUserService
     /// <summary>
     /// Updates an existing user with the provided data transfer object.
     /// </summary>
+    /// <param name="id">The unique identifier of the user to be updated.</param>
     /// <param name="user">The <see cref="UserDto"/> containing updated user information.</param>
     /// <param name="ct">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the updated <see cref="UserDto"/> if the update is successful, or null if the user does not exist.</returns>
-    Task<Result<UserDto>> UpdateUserAsync(UserDto user, CancellationToken ct);
+    Task<Result<UserDto>> UpdateUserAsync(Guid id, UserDto user, CancellationToken ct);
 
     /// <summary>
     /// Deletes a user with the specified identifier.

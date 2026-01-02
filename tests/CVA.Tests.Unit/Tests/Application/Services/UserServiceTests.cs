@@ -149,7 +149,7 @@ public class UserServiceTests
             .ReturnsAsync((User user, CancellationToken _) => user);
 
         // Act
-        var result = await sut.UpdateUserAsync(updateDto, CancellationToken.None);
+        var result = await sut.UpdateUserAsync(userId, updateDto, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result.Value);
@@ -268,7 +268,7 @@ public class UserServiceTests
             .ReturnsAsync(existingUser);
 
         // Act
-        var result = await sut.UpdateUserAsync(updateDto, CancellationToken.None);
+        var result = await sut.UpdateUserAsync(userId, updateDto, CancellationToken.None);
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -295,7 +295,7 @@ public class UserServiceTests
             .ThrowsAsync(new OperationCanceledException());
 
         // Act & Assert
-        await Assert.ThrowsAsync<OperationCanceledException>(() => sut.UpdateUserAsync(updateDto, CancellationToken.None));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => sut.UpdateUserAsync(userId, updateDto, CancellationToken.None));
     }
 
     /// <summary>
@@ -318,7 +318,7 @@ public class UserServiceTests
             .ReturnsAsync((User?)null);
 
         // Act
-        var result = await sut.UpdateUserAsync(updateDto, CancellationToken.None);
+        var result = await sut.UpdateUserAsync(userId, updateDto, CancellationToken.None);
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -343,7 +343,7 @@ public class UserServiceTests
         updateDto = updateDto with { Id = id };
 
         // Act
-        var result = await sut.UpdateUserAsync(updateDto, CancellationToken.None);
+        var result = await sut.UpdateUserAsync((Guid)id!, updateDto, CancellationToken.None);
 
         // Assert
         Assert.False(result.IsSuccess);

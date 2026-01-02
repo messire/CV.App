@@ -6,7 +6,7 @@ namespace CVA.Presentation.Web;
 /// The MainController class provides endpoints for managing user-related operations.
 /// </summary>
 [ApiController]
-[Route("[controller]/api/users")]
+[Route("/api/users")]
 [AllowAnonymous]
 public sealed class MainController(IUserService userService) : ControllerBase
 {
@@ -41,7 +41,7 @@ public sealed class MainController(IUserService userService) : ControllerBase
     /// <param name="newUser">The user to create.</param>
     /// <param name="ct">A cancellation token.</param>
     /// <returns>The created <see cref="UserDto"/>.</returns>
-    [HttpPost("/")]
+    [HttpPost("")]
     public async Task<ActionResult<UserDto>> CreateUserAsync([FromBody] UserDto newUser, CancellationToken ct)
     {
         var result = await userService.CreateUserAsync(newUser, ct);
@@ -57,12 +57,13 @@ public sealed class MainController(IUserService userService) : ControllerBase
     /// Updates an existing user's information asynchronously.
     /// </summary>
     /// <param name="updatedUser">The updated user data.</param>
+    /// <param name="id">The unique identifier of the user to update.</param>
     /// <param name="ct">A cancellation token.</param>
     /// <returns>The updated <see cref="UserDto"/>.</returns>
-    [HttpPut("/")]
-    public async Task<ActionResult<UserDto>> UpdateUserAsync([FromBody] UserDto updatedUser, CancellationToken ct)
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<UserDto>> UpdateUserAsync([FromBody] UserDto updatedUser, Guid id, CancellationToken ct)
     {
-        var result = await userService.UpdateUserAsync(updatedUser, ct);
+        var result = await userService.UpdateUserAsync(id, updatedUser, ct);
         return this.ToActionResult(result);
     }
 
@@ -72,7 +73,7 @@ public sealed class MainController(IUserService userService) : ControllerBase
     /// <param name="id">The unique identifier of the user to delete.</param>
     /// <param name="ct">A cancellation token.</param>
     /// <returns>The deleted <see cref="UserDto"/>.</returns>
-    [HttpDelete("/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<ActionResult<UserDto>> DeleteUserAsync(Guid id, CancellationToken ct)
     {
         var result = await userService.DeleteUserAsync(id, ct);

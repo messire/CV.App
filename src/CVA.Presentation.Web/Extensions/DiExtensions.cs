@@ -28,7 +28,10 @@ internal static class DiExtensions
         /// </summary>
         public void RegisterApiServices()
         {
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
             builder.Services.AddOpenApi();
         }
 
