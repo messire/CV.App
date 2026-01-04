@@ -1,4 +1,6 @@
-POST https://localhost:7145/
+@host=https://localhost:9145
+
+POST {{host}}/api/users/
 Content-Type: application/json
 
 {
