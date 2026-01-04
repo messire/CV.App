@@ -30,43 +30,64 @@ const CreateUserPage = () => {
 
     return <Container maxW={"Container.sm"}>
         <VStack gap={4}>
-            <Heading size="xl" textAlign="center" p={8}>
+            <Heading
+                size="xl"
+                textAlign="center"
+                p={8}
+            >
                 Create User
             </Heading>
             <Box w={"50%"}
                  bg={useColorModeValue("gray.50", "gray.800")}
                  p={6}
                  rounded={"lg"}
-                 shadow={"lg"}>
+                 shadow={"lg"}
+            >
                 <VStack gap={4}>
-                    <Input placeholder="Photo"
-                           name='photo'
-                           value={newUser.photo}
-                           borderColor={useColorModeValue("gray.200", "gray.700")}
-                           onChange={(e) => setNewUser({...newUser, photo: e.target.value})}/>
-                    <Input placeholder="Name"
-                           name='name'
-                           value={newUser.name}
-                           borderColor={useColorModeValue("gray.200", "gray.700")}
-                           onChange={(e) => setNewUser({...newUser, name: e.target.value})}/>
-                    <Input placeholder="Surname"
-                           name='surname'
-                           value={newUser.surname}
-                           borderColor={useColorModeValue("gray.200", "gray.700")}
-                           onChange={(e) => setNewUser({...newUser, surname: e.target.value})}/>
-                    <Input placeholder="email"
-                           name='email'
-                           type="email"
-                           value={newUser.email}
-                           borderColor={useColorModeValue("gray.200", "gray.700")}
-                           onChange={(e) => setNewUser({...newUser, email: e.target.value})}/>
-                    <Input placeholder="Phone"
-                           name='phone'
-                           type="phone"
-                           value={newUser.phone}
-                           borderColor={useColorModeValue("gray.200", "gray.700")}
-                           onChange={(e) => setNewUser({...newUser, phone: e.target.value})}/>
-                    <Button colorScheme="teal" onClick={handleAddUser} w='full'>Create</Button>
+                    <Input
+                        placeholder="Photo"
+                        name='photo'
+                        value={newUser.photo}
+                        borderColor={useColorModeValue("gray.200", "gray.700")}
+                        onChange={(e) => setNewUser({...newUser, photo: e.target.value})}
+                    />
+                    <Input
+                        placeholder="Name"
+                        name='name'
+                        value={newUser.name}
+                        borderColor={useColorModeValue("gray.200", "gray.700")}
+                        onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                    />
+                    <Input
+                        placeholder="Surname"
+                        name='surname'
+                        value={newUser.surname}
+                        borderColor={useColorModeValue("gray.200", "gray.700")}
+                        onChange={(e) => setNewUser({...newUser, surname: e.target.value})}
+                    />
+                    <Input
+                        placeholder="email"
+                        name='email'
+                        type="email"
+                        value={newUser.email}
+                        borderColor={useColorModeValue("gray.200", "gray.700")}
+                        onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                    />
+                    <Input
+                        placeholder="Phone"
+                        name='phone'
+                        type="phone"
+                        value={newUser.phone}
+                        borderColor={useColorModeValue("gray.200", "gray.700")}
+                        onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                    />
+                    <Button
+                        colorScheme="teal"
+                        onClick={handleAddUser}
+                        w='full'
+                    >
+                        Create
+                    </Button>
                 </VStack>
             </Box>
         </VStack>

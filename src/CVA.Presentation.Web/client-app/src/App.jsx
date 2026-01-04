@@ -37,13 +37,17 @@ function App() {
                     borderRadius="card"
                     boxShadow="soft"
                     bg="bg.glass"
-                    backdropFilter="blur(12px)"
                     border="1px solid"
                     borderColor="border.subtle"
                     overflow="hidden"
                 >
                     <Navbar/>
-                    <Box flex="1" display="flex" flexDirection="column" overflowY="auto">
+                    <Box
+                        flex="1"
+                        display="flex"
+                        flexDirection="column"
+                        overflowY="auto"
+                    >
                         <Routes>
                             <Route path="/" element={<ProfilesCatalogPage/>}/>
                             <Route path="/u/:id" element={<ProfilePage/>}/>

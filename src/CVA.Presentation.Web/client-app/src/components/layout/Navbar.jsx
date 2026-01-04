@@ -1,26 +1,34 @@
 import {Box, Button, Flex, HStack, Text, ClientOnly} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 
-import {useColorMode, useColorModeValue} from "../ui/color-mode.jsx";
+import {useColorMode} from "../ui/color-mode.jsx";
 
 import {FaMoon, FaRegFileAlt, FaSun} from "react-icons/fa";
 
 const Navbar = () => {
     const {colorMode, toggleColorMode} = useColorMode();
-    const bgButton = useColorModeValue(
-        "linear-gradient(135deg, brand.400, brand.600)",
-        "linear-gradient(135deg, brand.600, brand.800)"
-    );
 
     return (
-        <Box px={{base: 4, md: 6}} py={4} borderBottom="1px solid" borderColor="border.subtle">
-            <Flex h={12} alignItems="center" justifyContent="space-between">
+        <Box
+            px={{base: 4, md: 6}}
+            py={4}
+            borderBottom="1px solid"
+            borderColor="border.subtle"
+        >
+            <Flex
+                h={12}
+                alignItems="center"
+                justifyContent="space-between"
+            >
                 <Link to="/">
                     <HStack gap={3}>
                         <Box
                             w="40px"
                             h="40px"
-                            bg={bgButton}
+                            bg={{
+                                base: "linear-gradient(135deg, {colors.brand.500}, {colors.brand.600})",
+                                _dark: "linear-gradient(135deg, {colors.brand.600}, {colors.brand.800})"
+                            }}
                             borderRadius="12px"
                             display="flex"
                             alignItems="center"
@@ -29,7 +37,12 @@ const Navbar = () => {
                         >
                             <FaRegFileAlt size={22} color="white"/>
                         </Box>
-                        <Text fontWeight="700" fontSize="xl" letterSpacing="-0.03em" color="text.primary">
+                        <Text
+                            fontWeight="700"
+                            fontSize="xl"
+                            letterSpacing="-0.03em"
+                            color="text.primary"
+                        >
                             Resume.App
                         </Text>
                     </HStack>

@@ -1,9 +1,9 @@
-import {Box, Container} from "@chakra-ui/react";
+import {Box} from "@chakra-ui/react";
 
 const ProfileSectionCard = ({children, ...props}) => {
     return (
-        <Container
-            maxW="container.lg"
+        <Box
+            w="full"
             px={{base: 6, md: 8}}
             py={{base: 6, md: 8}}
             bg="bg.card"
@@ -17,7 +17,7 @@ const ProfileSectionCard = ({children, ...props}) => {
             <Box position="relative" zIndex={1}>
                 {children}
             </Box>
-        </Container>
+        </Box>
     )
 };
 

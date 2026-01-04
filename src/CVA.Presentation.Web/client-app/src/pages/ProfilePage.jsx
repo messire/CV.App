@@ -1,4 +1,4 @@
-import {Button, Box, Flex, HStack, Spinner, Text, VStack} from "@chakra-ui/react";
+import {Box, Flex, HStack, Spinner, Text, VStack} from "@chakra-ui/react";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 
@@ -47,25 +47,36 @@ const ProfilePage = () => {
     }
 
     return (
-        <VStack gap={6} align="stretch" w="full" p={{base: 4, md: 8, xl: 10}}>
-            <HStack 
-                w="full" 
-                gap={2} 
-                overflowX="auto" 
+        <VStack
+            maxW="container.lg"
+            w="full"
+            mx="auto"
+            gap={6}
+            align="stretch"
+            p={{base: 4, md: 8, xl: 10}}
+        >
+            <HStack
+                w="full"
+                gap={6}
+                overflowX="auto"
                 pb={2}
-                css={{
-                    '&::-webkit-scrollbar': { display: 'none' },
-                    'msOverflowStyle': 'none',
-                    'scrollbarWidth': 'none'
-                }}
+                py={2}
             >
-                <Button variant="ghost" color="text.brand" fontWeight="700">Profile</Button>
-                <Button variant="ghost" color="text.secondary">Skills</Button>
-                <Button variant="ghost" color="text.secondary">Work experience</Button>
-                <Button variant="ghost" color="text.secondary">Portfolio</Button>
+                <Box as="a" href="#profile" fontWeight="600" color="text.secondary" _hover={{color: "text.brand"}}>
+                    Profile
+                </Box>
+                <Box as="a" href="#skills" fontWeight="600" color="text.secondary" _hover={{color: "text.brand"}}>
+                    Skills
+                </Box>
+                <Box as="a" href="#work" fontWeight="600" color="text.secondary" _hover={{color: "text.brand"}}>
+                    Work experience
+                </Box>
+                <Box as="a" href="#portfolio" fontWeight="600" color="text.secondary" _hover={{color: "text.brand"}}>
+                    Portfolio
+                </Box>
             </HStack>
-            
-            <Flex direction={{base: "column", lg: "row"}} gap={6} w="full">
+
+            <Flex id="profile" direction={{base: "column", lg: "row"}} gap={6} w="full">
                 <Box flex="2">
                     <ProfileCommon user={user}/>
                 </Box>
@@ -73,10 +84,16 @@ const ProfilePage = () => {
                     <ProfileContacts user={user}/>
                 </Box>
             </Flex>
-            
-            <ProfileSkills user={user}/>
-            <ProfileWork user={user}/>
-            <ProfilePortfolio user={user}/>
+
+            <Box id="skills" mt={4}>
+                <ProfileSkills user={user}/>
+            </Box>
+            <Box id="work" mt={4}>
+                <ProfileWork user={user}/>
+            </Box>
+            <Box id="portfolio" mt={4}>
+                <ProfilePortfolio user={user}/>
+            </Box>
         </VStack>
     );
 }
