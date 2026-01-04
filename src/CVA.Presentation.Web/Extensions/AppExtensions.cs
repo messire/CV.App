@@ -26,7 +26,12 @@ internal static class AppExtensions
         public void ConfigureApi()
         {
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.MapControllers();
+
+            var appMode = app.Configuration.GetValue<string>("APP_MODE");
+            if (appMode == "dev/fe") return;
+            app.MapFallbackToFile("index.html");
         }
     }
 }

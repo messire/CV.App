@@ -21,6 +21,7 @@ public sealed partial class User
     /// <param name="surname">The last name of the user.</param>
     /// <param name="email">The email address of the user.</param>
     /// <param name="phone">The phone number of the user, if available.</param>
+    /// <param name="photo">Optional URL of the user's profile picture.</param>
     /// <param name="birthday">The date of birth of the user, if available.</param>
     /// <param name="summaryInfo">The summary or additional information about the user, if available.</param>
     /// <param name="skills">A collection of skills associated with the user, if available.</param>
@@ -33,6 +34,7 @@ public sealed partial class User
         string surname,
         string email,
         string? phone,
+        string? photo,
         DateOnly? birthday,
         string? summaryInfo,
         IEnumerable<string>? skills,
@@ -43,6 +45,7 @@ public sealed partial class User
 
         var user = new User(id, name, surname, email);
         user.UpdateProfile(phone, birthday, summaryInfo);
+        user.UpdatePhoto(photo);
         user.ReplaceSkills(skills);
         user.ReplaceWorkExperience(workExperience);
 
@@ -73,6 +76,13 @@ public sealed partial class User
         Birthday = birthday;
         SummaryInfo = summaryInfo?.Trim();
     }
+
+    /// <summary>
+    /// Updates the user's photo information.
+    /// </summary>
+    /// <param name="photo">The new photo to associate with the user. Null or whitespace will result in clearing the current photo.</param>
+    public void UpdatePhoto(string? photo)
+        => Photo = photo?.Trim();
 
     /// <summary>
     /// Replaces current skills list with a new set.

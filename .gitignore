@@ -96,4 +96,20 @@ coverage/
 .idea/.tasks/
 
 # Rider shelf
-.idea/shelf/ 
+.idea/shelf/
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.local
+
+# Local secrets & environment
+.env
+.env.*
+!.env.example

@@ -19,6 +19,11 @@ public record UserDto(string Name, string Surname, string Email)
     public string? Phone { get; init; }
 
     /// <summary>
+    /// The URL of the user's profile picture.
+    /// </summary>
+    public string? Photo { get; init; }
+
+    /// <summary>
     /// The birthdate of the user.
     /// </summary>
     public DateOnly? Birthday { get; init; }

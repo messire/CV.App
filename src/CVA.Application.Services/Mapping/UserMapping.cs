@@ -18,6 +18,7 @@ internal static class UserMapping
             {
                 Id = model.Id,
                 Phone = model.Phone,
+                Photo = model.Photo,
                 Birthday = model.Birthday,
                 SummaryInfo = model.SummaryInfo,
                 Skills = model.Skills.ToArray(),
@@ -49,6 +50,7 @@ internal static class UserMapping
         {
             var user  = User.Create(dto.Name, dto.Surname, dto.Email);
             user.UpdateProfile(dto.Phone, dto.Birthday, dto.SummaryInfo);
+            user.UpdatePhoto(dto.Photo);
             user.ReplaceSkills(dto.Skills);
             user.ReplaceWorkExperience(dto.WorkExperience?.ToModel());
             return user;

@@ -40,11 +40,12 @@ public class UserTests
     {
         // Arrange
         var email = "test@example.com";
+        var photo = "https://example.com/photo.jpg";
         var skills = new[] { "C#", "SQL" };
         var works = new[] { Work.Create("Company") };
 
         // Act
-        var user = User.FromPersistence(id, name, surname, email, phone, birthday, summary, skills, works);
+        var user = User.FromPersistence(id, name, surname, email, phone, photo, birthday, summary, skills, works);
 
         // Assert
         Assert.Equal(id, user.Id);
@@ -52,6 +53,7 @@ public class UserTests
         Assert.Equal(surname, user.Surname);
         Assert.Equal(email, user.Email.Value);
         Assert.Equal(phone, user.Phone);
+        Assert.Equal(photo, user.Photo);
         Assert.Equal(birthday, user.Birthday);
         Assert.Equal(summary, user.SummaryInfo);
         Assert.Equal(skills, user.Skills);
@@ -68,7 +70,7 @@ public class UserTests
     {
         // Act & Assert
         var exception = Assert.Throws<DomainValidationException>(() => 
-            User.FromPersistence(Guid.Empty, "N", "S", "e@e.com", null, null, null, null, null));
+            User.FromPersistence(Guid.Empty, "N", "S", "e@e.com", null, null, null, null, null, null));
         Assert.Equal("Id must not be empty.", exception.Message);
     }
 

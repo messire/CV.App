@@ -47,6 +47,7 @@ internal class UserPostgresRepository(PostgresContext context) : IUserRepository
         entity.Surname = updatedUser.Surname;
         entity.Email = updatedUser.Email;
         entity.Phone = updatedUser.Phone;
+        entity.Photo = updatedUser.Photo;
         entity.Birthday = updatedUser.Birthday;
         entity.SummaryInfo = updatedUser.SummaryInfo;
         entity.Skills = updatedUser.Skills.ToList();

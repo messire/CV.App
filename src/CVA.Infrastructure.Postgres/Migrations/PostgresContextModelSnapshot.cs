@@ -50,6 +50,11 @@ namespace CVA.Infrastructure.Postgres.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
 
+                    b.Property<string>("Photo")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("photo");
+
                     b.PrimitiveCollection<List<string>>("Skills")
                         .IsRequired()
                         .HasColumnType("text[]")
